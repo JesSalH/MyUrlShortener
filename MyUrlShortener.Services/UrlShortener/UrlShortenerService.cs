@@ -19,10 +19,10 @@ namespace MyUrlShortener.Services.UrlShortener
 
         public string ShortenUrl(string originalUrl)
         {            
+            EnsureArg.IsNotNullOrWhiteSpace(originalUrl, nameof(originalUrl));
+
             try
             {
-                EnsureArg.IsNotNullOrWhiteSpace(originalUrl, nameof(originalUrl));
-
                 originalUrl = CheckForHttp(originalUrl);
               
                 var existingShortenedUrl = _shortenedUrlsRepository.GetFirstOrDefault(x => x.OriginalUrl == originalUrl);
