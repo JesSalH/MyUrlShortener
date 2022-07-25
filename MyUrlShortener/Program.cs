@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MyUrlShortener.DataAccess.Data;
 using MyUrlShortener.DataAccess.Repositories;
 using MyUrlShortener.DataAccess.Repositories.IRepositories;
+using MyUrlShortener.Middleware;
 using MyUrlShortener.Services.UrlShortener;
 
 namespace MyUrlShortener
@@ -30,6 +31,9 @@ namespace MyUrlShortener
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseExceptionHandlingMiddleware();
+
             app.UseStaticFiles();
 
             app.UseRouting();

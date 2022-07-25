@@ -18,16 +18,7 @@ namespace MyUrlShortener.Controllers
         public IActionResult PostURL([FromBody] string url)
         {
             EnsureArg.IsNotNullOrEmpty(url, nameof(url));
-
-            try
-            {
-                var shortUrl = _urlShortenerService.ShortenUrl(url);
-                return Json(new JsonResponse() { Result = "OK", Code = shortUrl });
-            }
-            catch (Exception ex)
-            {
-                return Json(new JsonResponse() { Result = "Fail", Message = ex.Message });
-            }
+            return Json(_urlShortenerService.ShortenUrl(url));
         }
 
         [HttpGet, Route("/{code}")]
@@ -35,12 +26,11 @@ namespace MyUrlShortener.Controllers
         {
             try
             {
-                var originalUrl = _urlShortenerService.GetOriginalUrl(code);
-                return Redirect(originalUrl);
+                return Redirect(_urlShortenerService.GetOriginalUrl(code));
             }
             catch (Exception ex)
             {
-                return View("~/Views/Shared/Error.cshtml", new ErrorPageModel() { Message = ex.Message});
+                return View("~/Views/Shared/RedirectError.cshtml", new RedirectErrorPageModel() { Message = ex.Message });
             }
         }      
     }

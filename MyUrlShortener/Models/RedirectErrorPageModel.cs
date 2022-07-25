@@ -1,6 +1,6 @@
 namespace MyUrlShortener.Models
 {
-    public class ErrorPageModel
+    public class RedirectErrorPageModel
     {
         public string? Message { get; set; }
     }

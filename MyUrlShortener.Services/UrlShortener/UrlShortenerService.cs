@@ -1,6 +1,7 @@
 ﻿using EnsureThat;
 using MyUrlShortener.DataAccess.Repositories.IRepositories;
 using MyUrlShortener.Models;
+using MyUrlShortener.Services.UrlShortener.Constants;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,8 +9,6 @@ namespace MyUrlShortener.Services.UrlShortener
 {
     public sealed class UrlShortenerService : IUrlShortenerService
     {
-        private static readonly char[] chars =
-           "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
         private readonly IShortenedUrlRepository _shortenedUrlsRepository;
 
         public UrlShortenerService(IShortenedUrlRepository shortenedUrlsRepository)
@@ -51,13 +50,13 @@ namespace MyUrlShortener.Services.UrlShortener
             {
                 throw new UrlShortenerServiceException("Could not find original url");
             }
-
             return shortenedUrlObj.OriginalUrl;
         }
 
         private string GenerateShortCode()
         {
-            var size = 10;
+            var chars = RandomCodeGeneratorConstants.Chars.ToCharArray();
+            var size = RandomCodeGeneratorConstants.CodeSize;
             byte[] data = new byte[4 * size];
             using (var crypto = RandomNumberGenerator.Create())
             {
@@ -72,7 +71,6 @@ namespace MyUrlShortener.Services.UrlShortener
                 result.Append(chars[idx]);
             }
             //we could also check if this code already exists in the ddbb
-
             return result.ToString();
         }
 

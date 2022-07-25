@@ -3,7 +3,7 @@ var urlInput = document.querySelector("#urlShortener");
 var submitBtn = document.querySelector("#submitBtn");
 var outcome = document.querySelector("#outcome");
 
-submitBtn.onclick = function (ev) {
+submitBtn.onclick = async function (ev) {
     let url = urlInput.value;
     let stringifiedUrl = JSON.stringify(url)
     stringifiedUrl = stringifiedUrl.replace(/\\\\/g, '\\');
@@ -12,20 +12,23 @@ submitBtn.onclick = function (ev) {
         OutcomeMessage("Could not validate url");
         return null;
     }
-    fetch("/", {
+    let response = await fetch("/", {
         method: "POST",
         body: stringifiedUrl,
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(res => res.json())
-        .then(response => {
-            if (response.result == "OK") {
-                OutcomeMessage("Url shortened: " + new URL(window.location) + response.code )
-            } else if (response.result == "Fail") {
-                OutcomeMessage(response.message);
-            }
-        }).catch(error => console.log(error));
+    })
+
+    if (response.ok) {
+        let json = await response.json();
+        OutcomeMessage("Url shortened: " + new URL(window.location) + json)
+    } else if (response.status == 500) {
+        let json = await response.json();
+        OutcomeMessage(json.message);
+    } else {
+        OutcomeMessage("Could not shorten url");
+    }
 }
 
 function validateURL(str) {
@@ -37,7 +40,6 @@ function validateURL(str) {
         '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
     return !!pattern.test(str);
 }
-
 
 function OutcomeMessage(text) {
     outcome.classList.remove("inactive");
