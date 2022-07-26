@@ -35,9 +35,8 @@ namespace MyUrlShortener.Middleware
             {
                 if (exception is UrlShortenerServiceException)
                 {
-
                     exceptionMessage = $"Shortener Service Exception: {exception.Message}";
-                } 
+                }
                 else
                 {
                     exceptionMessage = exception.Message;
