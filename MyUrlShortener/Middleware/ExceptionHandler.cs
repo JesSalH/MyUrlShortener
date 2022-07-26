@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using MyUrlShortener.Services.UrlShortener;
+using Newtonsoft.Json;
 using System.Net;
 
-namespace MyUrlShortener.Models
+namespace MyUrlShortener.Middleware
 {
     public class ExceptionHandler
     {
@@ -27,11 +28,29 @@ namespace MyUrlShortener.Models
         private static Task HandleExceptionAsync(HttpContext context, IWebHostEnvironment env, Exception exception)
         {
             string result;
+            string exceptionMessage;
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            if (env.IsDevelopment())
+            {
+                if (exception is UrlShortenerServiceException)
+                {
+
+                    exceptionMessage = $"Shortener Service Exception: {exception.Message}";
+                } 
+                else
+                {
+                    exceptionMessage = exception.Message;
+                }
+            } 
+            else
+            {
+                exceptionMessage = "Could not process request";
+            }
 
             var errorMessage = new
             {
-                message = exception.Message
+                message = exceptionMessage
             };
 
             result = JsonConvert.SerializeObject(errorMessage);

@@ -1,6 +1,4 @@
-﻿using MyUrlShortener.Models;
-
-namespace MyUrlShortener.Middleware
+﻿namespace MyUrlShortener.Middleware
 {
     public static class ExceptionHandlerMiddleware
     {
