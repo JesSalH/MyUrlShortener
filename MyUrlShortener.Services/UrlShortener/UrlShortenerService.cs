@@ -69,8 +69,7 @@ namespace MyUrlShortener.Services.UrlShortener
                 var idx = rnd % chars.Length;
 
                 result.Append(chars[idx]);
-            }
-            //we could also check if this code already exists in the ddbb
+            }           
             return result.ToString();
         }
 
