@@ -15,7 +15,7 @@ namespace MyUrlShortener.Controllers
         }
 
         [HttpPost, Route("/")]
-        public IActionResult PostURL([FromBody] string url)
+        public IActionResult ShortenUrl([FromBody] string url)
         {
             EnsureArg.IsNotNullOrEmpty(url, nameof(url));
             return Json(_urlShortenerService.ShortenUrl(url));
